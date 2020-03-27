@@ -12,15 +12,23 @@ class UserManager(BaseUserManager):
 
         if not email:
             raise ValueError("Users must have an email address.")
-
         try:
             validate_email(email)
-        except ValidationError as error:
-            raise(error)
+        except ValidationError:
+            raise ValidationError("Invalid email address.")
 
         user = self.model(email=self.normalize_email(email), **extra_fields)
 
         user.set_password(password)
+        user.save(using=self._db)
+
+        return user
+
+    def create_superuser(self, email, password=None, **extra_fields):
+        """Creates and saves a new superuser"""
+        user = self.create_user(email, password)
+        user.is_staff = True
+        user.is_superuser = True  # is_superuser included in PermissionsMixin
         user.save(using=self._db)
 
         return user
