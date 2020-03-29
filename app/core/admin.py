@@ -7,7 +7,11 @@ from core.models import User
 
 class UserAdmin(BaseUserAdmin):
     ordering = ['id']
+
+    # fields to be included in list users page
     list_display = ['email', 'name']
+
+    # fields to be included on change user page (edit page)
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         (_('Personal info'), {'fields': ('name',)}),
@@ -16,6 +20,8 @@ class UserAdmin(BaseUserAdmin):
         (_('Important dates'), {'fields': ('last_login', )})
     )
 
+    # fields to be included in add user page
+    # therefore we can create a new user with just email and password
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
